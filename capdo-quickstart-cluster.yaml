@@ -1,0 +1,115 @@
+apiVersion: cluster.x-k8s.io/v1alpha3
+kind: Cluster
+metadata:
+  name: capdo-quickstart
+  namespace: default
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+    kind: KubeadmControlPlane
+    name: capdo-quickstart-control-plane
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: DOCluster
+    name: capdo-quickstart
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: DOCluster
+metadata:
+  name: capdo-quickstart
+  namespace: default
+spec:
+  region: nyc1
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: KubeadmControlPlane
+metadata:
+  name: capdo-quickstart-control-plane
+  namespace: default
+spec:
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: DOMachineTemplate
+    name: capdo-quickstart-control-plane
+  kubeadmConfigSpec:
+    initConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: external
+          provider-id: digitalocean://'{{ ds.meta_data["instance_id"] }}'
+        name: '{{ ds.meta_data["local_hostname"] }}'
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: external
+        name: '{{ ds.meta_data["local_hostname"] }}'
+  replicas: 1
+  version: v1.18.15
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: DOMachineTemplate
+metadata:
+  name: capdo-quickstart-control-plane
+  namespace: default
+spec:
+  template:
+    spec:
+      image: 80366900
+      size: s-2vcpu-2gb
+      sshKeys:
+      - 1991388
+---
+apiVersion: cluster.x-k8s.io/v1alpha3
+kind: MachineDeployment
+metadata:
+  name: capdo-quickstart-md-0
+  namespace: default
+spec:
+  clusterName: capdo-quickstart
+  replicas: 3
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+          kind: KubeadmConfigTemplate
+          name: capdo-quickstart-md-0
+      clusterName: capdo-quickstart
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+        kind: DOMachineTemplate
+        name: capdo-quickstart-md-0
+      version: v1.18.15
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: DOMachineTemplate
+metadata:
+  name: capdo-quickstart-md-0
+  namespace: default
+spec:
+  template:
+    spec:
+      image: 80366900
+      size: s-1vcpu-2gb-intel
+      sshKeys:
+      - 1991388
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: KubeadmConfigTemplate
+metadata:
+  name: capdo-quickstart-md-0
+  namespace: default
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs:
+            cloud-provider: external
+          name: '{{ ds.meta_data.local_hostname }}'
