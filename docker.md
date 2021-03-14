@@ -38,3 +38,11 @@ cert-manager                        cert-manager-cainjector-fc6c787db-6hlpc     
 cert-manager                        cert-manager-d994d94d7-z68jd                                     1/1     Running   0          2m28s
 cert-manager                        cert-manager-webhook-845d9df8bf-qbnhj                            1/1     Running   0          2m28s
 ```
+
+
+clusterctl config cluster capi-quickstart --flavor development \
+  --kubernetes-version v1.19.7 \
+  --control-plane-machine-count=3 \
+  --worker-machine-count=3 \
+  > capi-quickstart.yaml
+  
