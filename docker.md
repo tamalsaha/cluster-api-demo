@@ -18,3 +18,23 @@ You can now create your first workload cluster by running the following:
   clusterctl config cluster [name] --kubernetes-version [version] | kubectl apply -f -
 ```
 
+
+```
+$ kubectl get pods --all-namespaces
+NAMESPACE                           NAME                                                             READY   STATUS    RESTARTS   AGE
+capd-system                         capd-controller-manager-8594dfd47d-tftbx                         2/2     Running   0          83s
+
+capi-kubeadm-bootstrap-system       capi-kubeadm-bootstrap-controller-manager-ddcc95784-t46n9        2/2     Running   0          89s
+
+capi-kubeadm-control-plane-system   capi-kubeadm-control-plane-controller-manager-d85dfd44c-szmvg    2/2     Running   0          86s
+
+capi-system                         capi-controller-manager-5cd969bf55-pnql6                         2/2     Running   0          92s
+
+capi-webhook-system                 capi-controller-manager-68c9ff8646-v55zd                         2/2     Running   0          93s
+capi-webhook-system                 capi-kubeadm-bootstrap-controller-manager-7cf85756c5-mxkfr       2/2     Running   0          91s
+capi-webhook-system                 capi-kubeadm-control-plane-controller-manager-7854964ff4-5vbgj   2/2     Running   0          88s
+
+cert-manager                        cert-manager-cainjector-fc6c787db-6hlpc                          1/1     Running   0          2m28s
+cert-manager                        cert-manager-d994d94d7-z68jd                                     1/1     Running   0          2m28s
+cert-manager                        cert-manager-webhook-845d9df8bf-qbnhj                            1/1     Running   0          2m28s
+```
