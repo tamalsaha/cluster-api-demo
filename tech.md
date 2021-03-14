@@ -18,4 +18,9 @@ Build 'ubuntu-2004' finished after 19 minutes 13 seconds.
 
 ==> Builds finished. The artifacts of successful builds are:
 --> ubuntu-2004: A snapshot was created: 'Cluster API Kubernetes v1.18.15 on Ubuntu 20.04' (ID: 80366900) in regions 'nyc1'
+
+
+$ doctl compute image list-user
+ID          Name                                               Type        Distribution    Slug    Public    Min Disk
+80366900    Cluster API Kubernetes v1.18.15 on Ubuntu 20.04    snapshot    Ubuntu                  false     25
 ```
